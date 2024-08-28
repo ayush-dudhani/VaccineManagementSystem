@@ -19,6 +19,38 @@ CREATE TABLE second_dose ( cid NUMBER, dose_name VARCHAR2(100) NOT NULL, doctor_
 
 create TABLE booster_dose (cid NUMBER, dose_name VARCHAR2(100) NOT NULL, doctor_name VARCHAR2(100) NOT NULL, location VARCHAR2(255), dose_date date, CONSTRAINT pk_booster_dose PRIMARY KEY (cid), CONSTRAINT fk_second_dose FOREIGN KEY (cid) REFERENCES second_dose(cid) ON DELETE CASCADE );
 
+-- Trigger for the first_dose table
+CREATE OR REPLACE TRIGGER trg_update_dosescount_first_dose
+AFTER INSERT ON first_dose
+FOR EACH ROW
+BEGIN
+  UPDATE citizen
+  SET dosescount = dosescount + 1
+  WHERE cid = :NEW.cid;
+END;
+/
+
+-- Trigger for the second_dose table
+CREATE OR REPLACE TRIGGER trg_update_dosescount_second_dose
+AFTER INSERT ON second_dose
+FOR EACH ROW
+BEGIN
+  UPDATE citizen
+  SET dosescount = dosescount + 1
+  WHERE cid = :NEW.cid;
+END;
+/
+
+-- Trigger for the booster_dose table
+CREATE OR REPLACE TRIGGER trg_update_dosescount_booster_dose
+AFTER INSERT ON booster_dose
+FOR EACH ROW
+BEGIN
+  UPDATE citizen
+  SET dosescount = dosescount + 1
+  WHERE cid = :NEW.cid;
+END;
+/
 
 
 
