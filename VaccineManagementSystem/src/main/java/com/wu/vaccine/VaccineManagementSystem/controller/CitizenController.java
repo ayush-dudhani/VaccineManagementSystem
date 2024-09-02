@@ -15,6 +15,7 @@ import com.wu.vaccine.VaccineManagementSystem.dao.CitizenDAO;
 import com.wu.vaccine.VaccineManagementSystem.entity.BoosterDose;
 import com.wu.vaccine.VaccineManagementSystem.entity.Citizen;
 import com.wu.vaccine.VaccineManagementSystem.entity.FirstDose;
+import com.wu.vaccine.VaccineManagementSystem.entity.JSONObject;
 import com.wu.vaccine.VaccineManagementSystem.entity.SecondDose;
 import com.wu.vaccine.VaccineManagementSystem.exception.CitizenAlreadyExistedException;
 import com.wu.vaccine.VaccineManagementSystem.exception.CitizenNotFoundException;
@@ -107,7 +108,7 @@ public class CitizenController {
 	
 //	api/addFirstDose
 	@PostMapping("/addfirstdose")
-	public String addFirstDose(@RequestBody FirstDose firstDose) {
+	public JSONObject addFirstDose(@RequestBody FirstDose firstDose) {
 		return citizenDAO.addFirstDose(firstDose);
 		
 	}
@@ -120,7 +121,7 @@ public class CitizenController {
 	
 	
 	@PostMapping("/addseconddose")
-	public String addSecondDose(@RequestBody SecondDose secondDose) {
+	public JSONObject addSecondDose(@RequestBody SecondDose secondDose) {
 		return citizenDAO.addSecondDose(secondDose);
 		
 	}
@@ -133,7 +134,7 @@ public class CitizenController {
 	
 	
 	@PostMapping("/addboosterdose")
-	public String addBoosterDose(@RequestBody BoosterDose boosterDose) {
+	public JSONObject addBoosterDose(@RequestBody BoosterDose boosterDose) {
 		return citizenDAO.addBoosterDose(boosterDose);
 		
 	}
@@ -145,7 +146,7 @@ public class CitizenController {
 	
 	
 	@GetMapping("/citizen/{citizenId}/status")
-	public String getStatusOfCitizen(@PathVariable long citizenId) {
+	public JSONObject getStatusOfCitizen(@PathVariable long citizenId) {
 //		Exception Handling citizen not found
 		if(getCitizenById(citizenId) == null) {
 			throw new CitizenNotFoundException("Citizen with citizenId = " + citizenId + " not found");

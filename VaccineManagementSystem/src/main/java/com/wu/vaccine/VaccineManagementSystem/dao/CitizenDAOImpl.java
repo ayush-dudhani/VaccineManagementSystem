@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.wu.vaccine.VaccineManagementSystem.entity.BoosterDose;
 import com.wu.vaccine.VaccineManagementSystem.entity.Citizen;
 import com.wu.vaccine.VaccineManagementSystem.entity.FirstDose;
+import com.wu.vaccine.VaccineManagementSystem.entity.JSONObject;
 import com.wu.vaccine.VaccineManagementSystem.entity.SecondDose;
 import com.wu.vaccine.VaccineManagementSystem.exception.CitizenNotFoundException;
 import com.wu.vaccine.VaccineManagementSystem.exception.EligibilityCriteriaFailedException;
@@ -141,13 +142,14 @@ public class CitizenDAOImpl implements CitizenDAO {
 	}
 	@Transactional
 	@Override
-	public String addFirstDose(FirstDose firstDose) {
+	public JSONObject addFirstDose(FirstDose firstDose) {
 		Session s = entityManager.unwrap(Session.class);
 		if(getCitizenById(firstDose.getCitizenId()) == null) {
 			throw new EligibilityCriteriaFailedException("Invalid Citizen Id");
 		}
 		s.merge(firstDose);
-		return "success";
+		JSONObject jObject  = new JSONObject("success", 200); // json
+		return jObject;
 	}
 	
 	@Override
@@ -160,7 +162,7 @@ public class CitizenDAOImpl implements CitizenDAO {
 	}
 	@Transactional
 	@Override
-	public String addSecondDose(SecondDose secondDose) {
+	public JSONObject addSecondDose(SecondDose secondDose) {
 		// TODO Auto-generated method stub
 		Session s = entityManager.unwrap(Session.class);
 		Citizen cz = getCitizenById(secondDose.getCitizenId());
@@ -180,8 +182,8 @@ public class CitizenDAOImpl implements CitizenDAO {
 		}	
 		
 		s.merge(secondDose);
-		
-		return "success";
+		JSONObject jsonObject = new JSONObject("success", 200);
+		return jsonObject;
 	}
 	@Override
 	public ArrayList<SecondDose> getSecondDoses() {
@@ -193,7 +195,7 @@ public class CitizenDAOImpl implements CitizenDAO {
 	}
 	@Transactional
 	@Override
-	public String addBoosterDose(BoosterDose boosterDose) {
+	public JSONObject addBoosterDose(BoosterDose boosterDose) {
 		// TODO Auto-generated method stub
 		Session s = entityManager.unwrap(Session.class);
 		Citizen cz = getCitizenById(boosterDose.getCitizenId());
@@ -215,7 +217,8 @@ public class CitizenDAOImpl implements CitizenDAO {
 		
 		s.merge(boosterDose);
 		
-		return "success";
+		JSONObject jsonObject = new JSONObject("success", 200);
+		return jsonObject;
 	}
 	@Override
 	public ArrayList<BoosterDose> getBoosterDoses() {
@@ -237,21 +240,27 @@ public class CitizenDAOImpl implements CitizenDAO {
 	
 	
 	@Override
-	public String getStatusOfCitizen(long citizenId) {
+	public JSONObject getStatusOfCitizen(long citizenId) {
 		// TODO Auto-generated method stub
 		Session s = entityManager.unwrap(Session.class);
+		JSONObject jsonObject = new JSONObject();
 		Citizen cz = s.get(Citizen.class, citizenId);
+		String str = "";
+		int statusCode = 200;
 		if(cz.getDosesTaken() ==  0) {
-			return "Not Vaccinated";
+			str =  "Not Vaccinated";
 		} else if (cz.getDosesTaken() == 1) {
-			return "Partially Vaccinated";
+			str =  "Partially Vaccinated";
 		} else if (cz.getDosesTaken() == 2) {
-			return "Fully Vaccinated";
+			str = "Fully Vaccinated";
 		} else if (cz.getDosesTaken() == 3) {
-			return "Fully + Booster Dose Taken";
+			str = "Fully + Booster Dose Taken";
 		} else {
-			return "Something went wrong";
+			statusCode = 404;
+			str = "Something went wrong";
 		}
+		
+		return jsonObject;
 		
 	}
 	
