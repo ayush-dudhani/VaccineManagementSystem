@@ -87,3 +87,42 @@ insert into second_dose values (6, 'COVISHIELD', 'Dr. Kale', 'Kharadi Hospital',
 insert into booster_dose values (4, 'COVAXIN', 'Dr. Bonte', 'Yerwada Hospital', TO_DATE('2024-07-27', 'YYYY-MM-DD'))
 select * from booster_dose;
 
+
+CREATE OR REPLACE TRIGGER trg_for_booster_doses_count
+AFTER INSERT ON booster_dose
+FOR EACH ROW
+BEGIN
+    UPDATE citizen
+    SET dosescount = dosescount + 1
+    WHERE cid = :NEW.cid;
+END;
+
+
+CREATE OR REPLACE TRIGGER trg_for_second_doses_count
+AFTER INSERT ON second_dose
+FOR EACH ROW
+BEGIN
+    UPDATE citizen
+    SET dosescount = dosescount + 1
+    WHERE cid = :NEW.cid;
+END;
+
+CREATE OR REPLACE TRIGGER trg_for_doses_count
+AFTER INSERT ON first_dose
+FOR EACH ROW
+BEGIN
+    UPDATE citizen
+    SET dosescount = dosescount + 1
+    WHERE cid = :NEW.cid;
+END;
+
+CREATE OR REPLACE TRIGGER trg_update_doses_count_first_dose
+AFTER INSERT ON first_dose
+FOR EACH ROW
+BEGIN
+    UPDATE citizen
+    SET dosescount = dosescount + 1
+    WHERE cid = :NEW.cid;
+END;
+
+
